@@ -75,7 +75,7 @@ while (running)
 
             // get list of money received
             string sql = $"SELECT Payment.*, Person.FirstName, Person.LastName FROM Payment " +
-                "JOIN Person ON Payment.RecipientID = Person.PersonID " +
+                "JOIN Person ON Payment.GiverID = Person.PersonID " +
                 $"WHERE RecipientID={id}";
             SqliteCommand transactions = c.CreateCommand();
             transactions.CommandText = sql;
@@ -92,12 +92,14 @@ while (running)
                 string FirstName = rTransactions.GetString(6);
                 string LastName = rTransactions.GetString(7);
                 balance += Amount;
-                Console.WriteLine($"{PaymentID,5}|{Date,10}|{FirstName,10}|{LastName,10}|£{Amount,5}|{Description,20}");
+                Console.WriteLine($"{PaymentID,5} | {Date,14} | {FirstName,7} {LastName,7} | £{Amount,5} | {Description,20}");
 
             }
 
             // get list of money sent 
-            sql = $"SELECT * FROM Payment WHERE GiverID={id}";
+            sql = $"SELECT * FROM Payment " +
+                $"JOIN Person ON Payment.RecipientID = Person.PersonID " +
+                $"WHERE GiverID={id}";
             transactions = c.CreateCommand();
             transactions.CommandText = sql;
             rTransactions = transactions.ExecuteReader();
@@ -108,9 +110,12 @@ while (running)
                 int GiverID = rTransactions.GetInt32(1);
                 int RecipientID = rTransactions.GetInt32(2);
                 int Amount = rTransactions.GetInt32(3);
+                string Date = rTransactions.GetString(4);
+                string Description = rTransactions.GetString(5);
+                string FirstName = rTransactions.GetString(7);
+                string LastName = rTransactions.GetString(8);
                 balance -= Amount;
-                string Description = rTransactions.GetString(4);
-                Console.WriteLine($"{PaymentID,5}|{GiverID,5}|{RecipientID,5}|-£{Amount,5}|{Description,5}");
+                Console.WriteLine($"{PaymentID,5} | {Date,14} | {FirstName,7} {LastName,7} | £{Amount,5} | {Description,20}");
             }
 
             Console.WriteLine($"Total balance: £{balance}");
