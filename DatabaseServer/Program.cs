@@ -126,4 +126,9 @@ while (running)
         }
             c.Close();
     }
+    // Add transaction
+    if (input == "3")
+    {
+
+    }
 }
