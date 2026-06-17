@@ -129,6 +129,7 @@ while (running)
     // Add transaction
     if (input == "3")
     {
-
+        string sql = $"";
+        
     }
 }
